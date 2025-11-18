@@ -1,8 +1,11 @@
 @echo off
 :: ==================================================
 :: PIXEL EMERGENCY MENU + BACKUP COMPLETO
-:: Versione definitiva con istruzioni e Pikachu
+:: Versione 2.0 - Corretto bug directory
 :: ==================================================
+
+:: --- Salva la directory di avvio dello script ---
+set "SCRIPT_DIR=%~dp0"
 
 :: --- Pikachu ASCII di benvenuto ---
 echo.
@@ -33,7 +36,7 @@ echo 2 - Copia cartelle principali sul PC
 echo 3 - Avvia scrcpy (controllo remoto)
 echo 4 - Esci
 echo.
-set /p choice=Inserisci numero e premi INVIO: 
+set /p choice=Inserisci numero e premi INVIO:
 
 if "%choice%"=="1" goto ACCENDI_DISPLAY
 if "%choice%"=="2" goto COPIA_TUTTO
@@ -46,7 +49,12 @@ goto MENU
 :ACCENDI_DISPLAY
 echo ------------------------------------------
 echo Accendo lo schermo del telefono...
+:: Cambia directory temporaneamente e poi torna indietro
+pushd "%SCRIPT_DIR%platform-tools"
+
 adb shell input keyevent 26
+
+
 timeout /t 1 >nul
 echo Fatto! Lo schermo dovrebbe essere sveglio.
 echo Nota: se il telefono era in hard lock, il display si accende ma non si sblocca automaticamente.
@@ -56,34 +64,37 @@ goto MENU
 :COPIA_TUTTO
 echo ------------------------------------------
 echo Copio tutte le cartelle principali sul PC...
-set BACKUPFOLDER="%~dp0PixelBackup_%date:~6,4%%date:~3,2%%date:~0,2%"
-mkdir %BACKUPFOLDER%
+set "BACKUPFOLDER=%SCRIPT_DIR%PixelBackup_%date:~6,4%%date:~3,2%%date:~0,2%"
+mkdir "%BACKUPFOLDER%"
 
-cd /d ".\platform-tools"
+:: Cambia directory temporaneamente per eseguire tutti i comandi ADB
+pushd "%SCRIPT_DIR%platform-tools"
 
 echo Copio Download...
-adb pull "/sdcard/Download" %BACKUPFOLDER%\Download
+adb pull "/sdcard/Download" "%BACKUPFOLDER%\Download"
 
 echo Copio DCIM...
-adb pull "/sdcard/DCIM" %BACKUPFOLDER%\DCIM
+adb pull "/sdcard/DCIM" "%BACKUPFOLDER%\DCIM"
 
 echo Copio Movies...
-adb pull "/sdcard/Movies" %BACKUPFOLDER%\Movies
+adb pull "/sdcard/Movies" "%BACKUPFOLDER%\Movies"
 
 echo Copio Pictures...
-adb pull "/sdcard/Pictures" %BACKUPFOLDER%\Pictures
+adb pull "/sdcard/Pictures" "%BACKUPFOLDER%\Pictures"
 
 echo Copio WhatsApp Images...
-adb pull "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images" %BACKUPFOLDER%\WhatsApp_Images
+adb pull "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Images" "%BACKUPFOLDER%\WhatsApp_Images"
 
 echo Copio WhatsApp Video...
-adb pull "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Video" %BACKUPFOLDER%\WhatsApp_Video
+adb pull "/sdcard/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Video" "%BACKUPFOLDER%\WhatsApp_Video"
 
 echo Copio WhatsApp Lite Images...
-adb pull "/sdcard/Android/media/com.whatsapp.litex/WhatsApp/Media/WhatsApp Images" %BACKUPFOLDER%\WhatsAppLite_Images
+adb pull "/sdcard/Android/media/com.whatsapp.litex/WhatsApp/Media/WhatsApp Images" "%BACKUPFOLDER%\WhatsAppLite_Images"
 
 echo Copio WhatsApp Lite Video...
-adb pull "/sdcard/Android/media/com.whatsapp.litex/WhatsApp/Media/WhatsApp Video" %BACKUPFOLDER%\WhatsAppLite_Video
+adb pull "/sdcard/Android/media/com.whatsapp.litex/WhatsApp/Media/WhatsApp Video" "%BACKUPFOLDER%\WhatsAppLite_Video"
+
+
 
 echo ------------------------------------------
 echo Tutte le cartelle principali copiate con successo!
@@ -95,8 +106,12 @@ goto MENU
 :AVVIA_SCRCPY
 echo ------------------------------------------
 echo Avvio scrcpy per controllo remoto del telefono...
-cd /d ".\scrcpy-win64"
+:: Cambia directory temporaneamente
+pushd "%SCRIPT_DIR%scrcpy-win64"
+
 scrcpy.exe --stay-awake
+
+
 echo ------------------------------------------
 goto MENU
 
