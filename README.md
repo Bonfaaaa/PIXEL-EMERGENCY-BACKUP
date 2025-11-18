@@ -13,7 +13,6 @@ This toolkit is designed for exactly those scenarios. It provides a simple comma
 - [ADB / Platform Tools](https://developer.android.com/studio/releases/platform-tools) installed  
 - [Scrcpy](https://github.com/Genymobile/scrcpy) for remote control via PC  
 - USB Debugging enabled and already authorized for your PC  
-- Pattern/PIN already set and phone unlocked at least once after reboot
 
 
 ## 🚀 How to Use
