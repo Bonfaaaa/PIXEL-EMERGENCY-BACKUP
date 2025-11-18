@@ -26,7 +26,9 @@ The script provides a simple menu with the following choices:
 - Start Scrcpy (Remote Control): Launches Scrcpy, allowing you to see and control your phone's screen in a window on your PC using your mouse and keyboard. This is the perfect tool for unlocking your device or using it normally.
 - Exit: Closes the toolkit.
 
-- Understanding "Soft Lock" vs. "Hard Lock"
+---
+
+Understanding "Soft Lock" vs. "Hard Lock"
    - HARD LOCK (after a reboot): If you've just rebooted your phone, its internal storage is encrypted. It requires your first unlock (PIN/pattern/password) to be decrypted.
   In this state, the Backup (Option 2) WILL FAIL, because ADB cannot access encrypted files.
   You can still use Scrcpy (Option 3) to see the lock screen and enter your code using your PC's mouse.
